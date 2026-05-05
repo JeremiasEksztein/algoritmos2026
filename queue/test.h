@@ -11,6 +11,8 @@ typedef struct {
 	size_t mips;
 } Computer;
 
+int computer_seed_arr(Computer *arr, size_t n);
+
 int computer_eq(const Computer *lhs, const Computer *rhs)
 {
 	return (memcmp(lhs->cpu, rhs->cpu, sizeof(Computer))) ? 0 : 1;
