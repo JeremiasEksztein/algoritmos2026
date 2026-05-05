@@ -181,14 +181,11 @@ void stack_delete(Stack* stk)
 
 	s = stk->impl;
 
-	if(s->n) {
-		while(s->top->prev) {
-			tmp = s->top->prev;
-			NODE_DELETE(s->top);
-			s->top = tmp;
-		}
-
-		NODE_DELETE(s->top);
+	while(s->top) {
+		free(s->top->buf);
+		tmp = s->top;
+		s->top = s->top->prev;
+		free(tmp);
 	}
 	
 	memset(stk, 0, sizeof(Stack));

@@ -1,32 +1,64 @@
 #ifndef STACK_H
 #define STACK_H
 
-#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 #include <stddef.h>
+
+#define MIN(x, y) (((x) > (y)) ? (y) : (x))
 
 #define OK 0
 #define ERR 1
 
 #define TRUE 1
 #define FALSE 0
+#define UNKNOWN -1
 
-typedef struct {
-	char impl_storage[512];
-	void* impl;
-} Stack;
+#ifndef BUFFER_ZEROING
+#define BUFFER_ZEROING 0
+#endif
 
-extern int stack_new(Stack* stk);
+typedef struct ArrayStack {
+	#define ARRAYSTACK_BUF_LEN 4096
+	char buf[ARRAYSTACK_BUF_LEN];
+	size_t top;
+} ArrayStack;
 
-extern int stack_push(Stack* stk, void* elem, size_t n);
+void arraystack_new(ArrayStack *stk);
 
-extern int stack_peek(Stack* stk, void* buf, size_t n);
+int arraystack_push(ArrayStack *stk, const void *elem, size_t n);
 
-extern int stack_pop(Stack* stk, void* buf, size_t n);
+int arraystack_pop(ArrayStack *stk, void *buf, size_t n);
 
-extern int stack_is_full(Stack* stk, size_t n);
+int arraystack_peek(const ArrayStack *stk, void *buf, size_t n);
 
-extern int stack_is_empty(Stack* stk);
+int arraystack_is_full(const ArrayStack *stk, size_t n);
 
-extern void stack_delete(Stack* stk);
+int arraystack_is_empty(const ArrayStack *stk);
 
-#endif /* STACK_H */
+void arraystack_destroy(ArrayStack *stk);
+
+typedef struct Node Node;
+struct Node {
+	struct Node *next;
+	size_t n;
+	void *buf;
+};
+
+typedef Node *LinkedStack;
+
+void linkedstack_new(LinkedStack *stk);
+
+int linkedstack_push(LinkedStack *stk, const void *elem, size_t n);
+
+int linkedstack_pop(LinkedStack *stk, void *buf, size_t n);
+
+int linkedstack_peek(const LinkedStack *stk, void *buf, size_t n);
+
+int linkedstack_is_full(const LinkedStack *stk, size_t n);
+
+int linkedstack_is_empty(const LinkedStack *stk);
+
+void linkedstack_destroy(LinkedStack *stk);
+
+#endif
