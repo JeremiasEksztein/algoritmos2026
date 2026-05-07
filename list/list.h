@@ -9,6 +9,8 @@
 #include <assert.h>
 #include <stdio.h>
 
+#include "iterator.h"
+
 #define MIN(x, y) (((x) > (y)) ? (y) : (x))
 
 #define OK 0
@@ -18,18 +20,12 @@
 #define FALSE 0
 #define UNKNOWN -1
 
-typedef int (*next_fn)(void *state);
 typedef int (*cmp_fn)(const void *lhs, const void *rhs);
 typedef void (*unique_fn)(void *old, const void *new, void *user);
 typedef int (*map_fn)(const void *from, void *to, void *user);
 typedef int (*filter_fn)(const void *elem, void *user);
 typedef int (*reduce_fn)(const void *elem, void *reduc, void *user);
 typedef int (*foreach_fn)(const void *elem, void *user);
-
-typedef struct ListIterator {
-	void *state;
-	next_fn next;
-} ListIterator;
 
 #ifndef BUFFER_ZEROING
 #define BUFFER_ZEROING 0
@@ -78,7 +74,7 @@ int arraylist_filter(ArrayList *dst, ArrayList *src, filter_fn filter, void *use
 int arraylist_reduce(void *reduction, ArrayList *src, reduce_fn reduce, void *user);
 int arraylist_foreach(ArrayList *list, foreach_fn foreach, void *user);
 
-int arraylist_into_iter(ArrayList *list, ListIterator *iter);
+int arraylist_into_iter(ArrayList *list, Iterator *iter);
 
 void arraylist_destroy(ArrayList *list);
 
@@ -131,7 +127,7 @@ int slinkedlist_filter(SLinkedList *dst, SLinkedList *src, filter_fn filter, voi
 int slinkedlist_reduce(void *reduction, SLinkedList *src, reduce_fn reduce, void *user);
 int slinkedlist_foreach(SLinkedList *list, foreach_fn foreach, void *user);
 
-int slinkedlist_into_iter(SLinkedList *list, ListIterator *iter);
+int slinkedlist_into_iter(SLinkedList *list, Iterator *iter);
 
 void slinkedlist_destroy(SLinkedList *list);
 
@@ -184,7 +180,7 @@ int dlinkedlist_filter(DLinkedList *dst, DLinkedList *src, filter_fn filter, voi
 int dlinkedlist_reduce(void *reduction, DLinkedList *src, reduce_fn reduce, void *user);
 int dlinkedlist_foreach(DLinkedList *list, foreach_fn foreach, void *user);
 
-int dlinkedlist_into_iter(DLinkedList *list, ListIterator *iter);
+int dlinkedlist_into_iter(DLinkedList *list, Iterator *iter);
 
 void dlinkedlist_destroy(DLinkedList *list);
 
