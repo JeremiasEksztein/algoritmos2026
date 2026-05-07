@@ -42,34 +42,22 @@ static void DELETE_NODE(Node *node)
 }
 
 static Node *merge_sort(Node *head, cmp_fn cmp);
+static Node *split(Node *l);
 static Node *merge(Node *lo, Node *hi, cmp_fn cmp);
-static void append(Node *head, Node *tail);
+/*static void append(Node *head, Node *tail);*/
 
 static Node *merge_sort(Node *list, cmp_fn cmp)
 {
-	Node *lo, *hi, *fast, *slow, *tmp;
+	Node *lo, *hi;
 
 	lo = list;
 	hi = NULL;
-	fast = list;
-	slow = list;
 
 	if(!list || !list->next) {
 		return list;
 	}
 
-	while(!fast && !fast->next) {
-		fast = fast->next->next;
-		if(!fast) {
-			slow = slow->next;
-		}
-	}
-
-	tmp = slow->next;
-	slow->next = NULL;
-
-	lo = slow;
-	hi = tmp;
+	hi = split(lo);
 	
 	lo = merge_sort(lo, cmp);
 	hi = merge_sort(hi, cmp);
@@ -77,6 +65,47 @@ static Node *merge_sort(Node *list, cmp_fn cmp)
 	return merge(lo, hi, cmp);
 }
 
+static Node *split(Node *l)
+{
+	Node *slow, *fast, *tmp;
+
+	slow = l;
+	fast = l;
+	tmp = NULL;
+	
+	while(!fast && !fast->next) {
+		fast = fast->next->next;
+		if(!fast) {
+			slow = slow->next;
+		}
+	}	
+
+	tmp = slow->next;
+	slow->next = NULL;
+
+	return tmp;
+}
+
+static Node *merge(Node *lo, Node *hi, cmp_fn cmp)
+{
+	if(!lo) {
+		return hi;
+	}
+
+	if(!hi) {
+		return lo;
+	}
+
+	if(cmp(lo->buf, hi->buf) >= 0) {
+		lo->next = merge(lo, hi->next, cmp);
+	} else {
+		hi->next = merge(lo->next, hi, cmp);
+	}
+
+	return NULL;
+}
+
+/*
 static Node *merge(Node *lo, Node *hi, cmp_fn cmp)
 {
 	Node *res;
@@ -92,28 +121,34 @@ static Node *merge(Node *lo, Node *hi, cmp_fn cmp)
 	}
 	
 	while(lo != NULL && hi != NULL) {
-			if(cmp(lo, hi) >= 0) {
-				append(res, lo);
+			if(cmp(lo->buf, hi->buf) >= 0) {
+				res->next = lo;
+				res = res->next;
 				lo = lo->next;
 			} else {
-				append(res, hi);
+				res->next = hi;
+				res = res->next;
 				hi = hi->next;
 			}
 	}
 
 	while(lo != NULL) {
-		append(res, lo);
+		res->next = lo;
+		res = res->next;
 		lo = lo->next;
 	} 
 	
 	while(hi != NULL) {
-		append(res, hi);
+		res->next = hi;
+		res = res->next;
 		hi = hi->next;
 	}
 
 	return res;
 }
+*/
 
+/*
 static void append(Node *head, Node *tail)
 {
 	if(!head) {
@@ -127,6 +162,7 @@ static void append(Node *head, Node *tail)
 
 	head = tail;
 }
+*/
 
 int slinkedlist_new(SLinkedList *list)
 {
@@ -286,13 +322,6 @@ int slinkedlist_add(SLinkedList *list, size_t i, const void *elem, size_t n)
 
 	tmp->next = *list;
 	*list = tmp;
-
-/*
-	Could this work?
-	
-	tmp->next = (*list)->next;
-	(*list)->next = tmp;
-*/	
 
 	return OK;
 }

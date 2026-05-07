@@ -18,6 +18,8 @@
 #define BUFFER_ZEROING 0
 #endif
 
+/* ArrayQueue */
+
 typedef struct ArrayQueue {
 #define ARRAYQUEUE_BUF_LEN 4096
 	char buf[ARRAYQUEUE_BUF_LEN];
@@ -38,6 +40,8 @@ int arrayqueue_is_full(const ArrayQueue *q, size_t n);
 int arrayqueue_is_empty(const ArrayQueue *q);
 
 void arrayqueue_destroy(ArrayQueue *q);
+
+/* LinkedQueue */
 
 typedef struct Node Node;
 struct Node {
@@ -64,5 +68,23 @@ int linkedqueue_is_full(const LinkedQueue *q, size_t n);
 int linkedqueue_is_empty(const LinkedQueue *q);
 
 void linkedqueue_destroy(LinkedQueue *q);
+
+/* CircularLinkedQueue */
+
+typedef Node *CLinkedQueue;
+
+void clinkedqueue_new(CLinkedQueue *q);
+
+int clinkedqueue_add(CLinkedQueue *q, const void *elem, size_t n);
+
+int clinkedqueue_rem(CLinkedQueue *q, void *buf, size_t n);
+
+int clinkedqueue_first(const CLinkedQueue *q, void *buf, size_t n);
+
+int clinkedqueue_is_full(const CLinkedQueue *q, size_t n);
+
+int clinkedqueue_is_empty(const CLinkedQueue *q);
+
+void clinkedqueue_destroy(CLinkedQueue *q);
 
 #endif
