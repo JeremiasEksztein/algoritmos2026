@@ -30,6 +30,28 @@ struct JsonLexer {
     size_t line;
 };
 
+
+struct JsonArray {
+	size_t n;
+	void *buf;
+};
+
+struct Node {
+	struct Node *l, *r;
+	const char *key;
+	void *buf;
+};
+
+struct JsonObject {
+	struct Node *tree;
+	size_t n;
+};
+
+struct JsonString {
+	size_t len;
+	const char *str;
+};
+
 #define ISASCIIWS(ch) ( \
 	(ch) == '\n' || \
 	(ch) == '\t' || \
@@ -243,6 +265,15 @@ static struct Token lexer_peek(struct JsonLexer *lexer)
 	return lexer_next(&saved);
 }
 
+static int token_equals(struct Token tok, enum TokenKind kind)
+{
+	if(tok.kind == kind) {
+		return 1;
+	}
+
+	return 0;
+}
+
 /*
     json := value?
     
@@ -260,7 +291,6 @@ static struct Token lexer_peek(struct JsonLexer *lexer)
         
 */
 
-
 static struct JsonValue *parse_json(struct JsonLexer *lexer);
 
 static struct JsonValue *parse_value(struct JsonLexer *lexer);
@@ -273,12 +303,93 @@ static struct JsonValue *parse_string(struct JsonLexer *lexer);
 
 static struct JsonValue *parse_number(struct JsonLexer *lexer);
 
+static struct JsonValue *make_number(struct Token tok)
+{
+	struct JsonValue *new;
 
+	new = malloc(sizeof(struct JsonValue));
+
+	if(!new) {
+		return NULL;
+	}	
+
+	new->kind = JSON_VAL_NUM;
+
+	
+}
+
+static struct JsonValue *make_string(struct Token tok)
+{
+	struct JsonValue *new;
+
+	new = malloc(sizeof(struct JsonValue));
+	if(!new) {
+		return NULL;
+	}
+
+	new->kind = JSON_VAL_STRING;
+	new->val.str = malloc(sizeof(struct JsonString));
+
+	if(!new->val.str) {
+		free(new);
+		return NULL;
+	}
+
+	new->val.str->len = tok.len;
+	new->val.str->str = strndup(tok.lexeme, tok.len);
+
+	if(!new->val.str->len) {
+		free(new->val.str);
+		free(new);
+		return NULL;
+	}
+
+	return new;
+}
+
+static struct JsonValue *make_boolean(struct Token tok)
+{
+	struct JsonValue *new;
+
+	new = malloc(sizeof(struct JsonValue));
+	if(!new) {
+		return NULL;
+	}
+
+	new->kind = JSON_VAL_BOOLEAN;
+	new->val.num = (*(tok.lexeme) == 't') ? 1 : 0;
+
+	return new;		
+}
+
+static struct JsonValue *make_null(void)
+{
+	struct JsonValue *new;
+
+	new = malloc(sizeof(struct JsonValue));
+	if(!new) {
+		return NULL;
+	}
+
+	new->kind = JSON_VAL_NULL;
+	new->val.num = 0;
+
+	return new;		
+}
+
+static struct JsonValue *make_object(struct Token tok)
+{
+	
+}
+
+static struct JsonValue *add_member(struct JsonValue *obj, struct Token tok);
+static struct JsonValue *make_array(struct Token tok);
+static struct JsonValue *add_elem(struct JsonValue *arr, struct Token tok);
 
 static struct JsonValue *parse_json(struct JsonLexer *lexer)
 {
 	struct JsonValue *value;
-	
+
 	value = parse_value(lexer);
 	
 	return value;
@@ -289,14 +400,14 @@ static struct JsonValue *parse_value(struct JsonLexer *lexer)
 	struct JsonValue *value;
 	struct Token tok;
 
-	tok = lexer_next(lexer);
+	tok = lexer_peek(lexer);
 
 	switch(tok.kind) {
 		case TOK_NUM:
-			value = make_number(tok.start, tok.len);
+			value = make_number(lexer_next(lexer));
 			break;
 		case TOK_STR:
-			value = make_string(tok.start, tok.len);
+			value = make_string(lexer_next(lexer));
 			break;
 		case TOK_LCURLY:
 			value = parse_object(lexer);
@@ -305,13 +416,15 @@ static struct JsonValue *parse_value(struct JsonLexer *lexer)
 			value = parse_array(lexer);
 			break;
 		case TOK_TRUE:
-			value = make_boolean(tok.start, tok.len);
+			value = make_boolean(lexer_next(lexer));
 			break;
 		case TOK_FALSE:
-			value = make_boolean(tok.start, tok.len);
+			value = make_boolean(lexer_next(lexer));
 			break;
 		case TOK_NULL:
-			value = make_null(tok.start, tok.len);
+			value = make_null();
+			lexer_next(lexer);
+			break;
 		default:	return NULL;	
 	}
 
@@ -324,7 +437,7 @@ static struct JsonValue *parse_object(struct JsonLexer *lexer)
 	struct Token tok;
 
 	value = make_object();
-	tok = lexer_next(lexer);
+	tok = lexer_peek(lexer);
 
 	while(tok.kind != TOK_RCURLY) {
 		add_member(value, parse_string(lexer), parse_value(lexer));
@@ -352,11 +465,19 @@ static struct JsonValue *parse_string(struct JsonLexer *lexer)
 {
 	struct JsonValue *value;
 
-	
-	
+	value = make_string(lexer_next(lexer));
+
+	return value;
 }
 
-static struct JsonValue *parse_number(struct JsonLexer *lexer);
+static struct JsonValue *parse_number(struct JsonLexer *lexer)
+{
+	struct JsonValue *value;
+
+	value = make_number(lexer_next(lexer));
+
+	return value;
+}
 
 struct JsonValue *json_parse(const char *src, int opt)
 {
@@ -370,7 +491,7 @@ struct JsonValue *json_parse(const char *src, int opt)
     lexer.src = src;
     lexer.pos = src;
     
-    json = 
+    json = parse_json(&lexer);
     
     return json;
 }
