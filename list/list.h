@@ -23,6 +23,7 @@
 typedef int (*cmp_fn)(const void *lhs, const void *rhs);
 typedef void (*unique_fn)(void *old, const void *new, void *user);
 typedef int (*map_fn)(const void *from, void *to, void *user);
+typedef int (*print_fn)(const void *data);
 typedef int (*filter_fn)(const void *elem, void *user);
 typedef int (*reduce_fn)(const void *elem, void *reduc, void *user);
 typedef int (*foreach_fn)(const void *elem, void *user);
@@ -109,10 +110,9 @@ int slinkedlist_remhi(SLinkedList *list, void *buf, size_t n);
 int slinkedlist_rem(SLinkedList *list, size_t i, void *buf, size_t n);
 
 int slinkedlist_add_ordered(SLinkedList *list, const void *buf, size_t n, cmp_fn cmp);
-int slinkedlist_rem_ordered(SLinkedList *list, void *buf, size_t n, cmp_fn cmp);
+int slinkedlist_rem_ordered(SLinkedList *list, void *buf, size_t n, const void *key, cmp_fn cmp);
 
 int slinkedlist_add_unique(SLinkedList *list, const void *buf, size_t n, cmp_fn cmp, unique_fn unique, void *user);
-/*int slinkedlist_rem_unique(SLinkedList *list, void *buf, size_t n, cmp_fn cmp, unique_fn unique, void *user);*/
 
 int slinkedlist_sort(SLinkedList *list, cmp_fn cmp);
 int slinkedlist_lsearch(const SLinkedList *list, const void *key, cmp_fn cmp);
@@ -122,7 +122,10 @@ int slinkedlist_copy(SLinkedList *dst, SLinkedList *src);
 int slinkedlist_concat(SLinkedList *dst, SLinkedList *src);
 int slinkedlist_concatv(SLinkedList *dst, ...);
 
+int slinkedlist_print(const SLinkedList *list, print_fn print);
+
 int slinkedlist_map(SLinkedList *dst, SLinkedList *src, map_fn map, void* user);
+int slinkedlist_reverse(SLinkedList *dst, SLinkedList *src);
 int slinkedlist_filter(SLinkedList *dst, SLinkedList *src, filter_fn filter, void *user);
 int slinkedlist_reduce(void *reduction, SLinkedList *src, reduce_fn reduce, void *user);
 int slinkedlist_foreach(SLinkedList *list, foreach_fn foreach, void *user);
@@ -131,6 +134,12 @@ int slinkedlist_into_iter(SLinkedList *list, Iterator *iter);
 
 void slinkedlist_destroy(SLinkedList *list);
 
+
+/* 
+As taught by the professor. The DList is a pointer to the last recently used node.
+I guess that makes it more cache friendly? If a bit more complicated in general
+to get the lenght of a dlist I think you could get it in O(N/2) instead of O(N)
+*/
 typedef struct DNode DNode;
 struct DNode {
 	DNode *next;
@@ -163,17 +172,21 @@ int dlinkedlist_remhi(DLinkedList *list, void *buf, size_t n);
 int dlinkedlist_rem(DLinkedList *list, size_t i, void *buf, size_t n);
 
 int dlinkedlist_add_ordered(DLinkedList *list, const void *buf, size_t n, cmp_fn cmp);
-int dlinkedlist_rem_ordered(DLinkedList *list, void *buf, size_t n, cmp_fn cmp);
+int dlinkedlist_rem_ordered(DLinkedList *list, void *buf, size_t n, const void *key, cmp_fn cmp);
 
 int dlinkedlist_add_unique(DLinkedList *list, const void *buf, size_t n, cmp_fn cmp, unique_fn unique, void *user);
 int dlinkedlist_rem_unique(DLinkedList *list, void *buf, size_t n, cmp_fn cmp, unique_fn unique, void *user);
 
 int dlinkedlist_sort(DLinkedList *list, cmp_fn cmp);
-int dlinkedlist_search(const DLinkedList *list, const void *key, cmp_fn cmp);
+int dlinkedlist_lsearch(const DLinkedList *list, const void *key, cmp_fn cmp);
+int dlinkedlist_ord_search(const DLinkedList *list, const void *key, cmp_fn cmp);
 
 int dlinkedlist_copy(DLinkedList *dst, DLinkedList *src);
 int dlinkedlist_concat(DLinkedList *dst, DLinkedList *src);
 int dlinkedlist_concatv(DLinkedList *dst, ...);
+
+int dlinkedlist_printl(DLinkedList *list, print_fn print);
+int dlinkedlist_printr(DLinkedList *list, print_fn print);
 
 int dlinkedlist_map(DLinkedList *dst, DLinkedList *src, map_fn map, void* user);
 int dlinkedlist_filter(DLinkedList *dst, DLinkedList *src, filter_fn filter, void *user);

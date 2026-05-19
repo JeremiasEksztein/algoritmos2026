@@ -23,6 +23,13 @@ void computer_show(const Computer *c)
 	printf("CPU: %s\tGPU: %s\tRAM: %s\tMIPS: %lu\n", c->cpu, c->gpu, c->ram, c->mips);
 }
 
+int computer_print(const void *data)
+{
+	const Computer *c = data;
+	printf("CPU: %s\tGPU: %s\tRAM: %s\tMIPS: %lu\n", c->cpu, c->gpu, c->ram, c->mips);
+	return 0;
+}
+
 int computer_cmp(const void *lhs, const void *rhs)
 {
 	const Computer *a = lhs;

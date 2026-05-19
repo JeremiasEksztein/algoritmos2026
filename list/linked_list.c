@@ -189,7 +189,6 @@ size_t slinkedlist_len(const SLinkedList *list)
 	return n;
 }
 
-
 int slinkedlist_is_empty(const SLinkedList *list)
 {
 	if(!list) {
@@ -287,7 +286,7 @@ int slinkedlist_addhi(SLinkedList *list, const void *elem, size_t n)
 		return ERR;
 	}
 
-	while(*list) {
+	while((*list)->next) {
 		list = &(*list)->next;
 	}
 
@@ -304,19 +303,18 @@ int slinkedlist_add(SLinkedList *list, size_t i, const void *elem, size_t n)
 		return ERR;
 	}	
 
-	tmp = MAKE_NODE(NULL, n, elem);
-
-	if(!tmp) {
-		return ERR;
-	}
-
 	while((*list) && i) {
 		list = &(*list)->next;
 		i--;
 	}
 
 	if(i && !*list) {
-		DELETE_NODE(tmp);
+		return ERR;
+	}
+	
+	tmp = MAKE_NODE(NULL, n, elem);
+
+	if(!tmp) {
 		return ERR;
 	}
 
@@ -378,7 +376,7 @@ int slinkedlist_rem(SLinkedList *list, size_t i, void *buf, size_t n)
 		i--;
 	}
 
-	if(i && !(*list)->next) {
+	if(i && !(*list)) {
 		return ERR;
 	}
 
@@ -416,22 +414,29 @@ int slinkedlist_add_ordered(SLinkedList *list, const void *elem, size_t n, cmp_f
 	return OK;		
 }
 
-int slinkedlist_rem_ordered(SLinkedList *list, void *buf, size_t n, cmp_fn cmp)
+int slinkedlist_rem_ordered(SLinkedList *list, void *buf, size_t n, const void *key, cmp_fn cmp)
 {
 	Node *tmp;
 	int res;
-	
+
+
+	/* What the fuck is this, why does it allocate a new node?? */
 	if(!list || !buf || !cmp) {
 		return ERR;
 	}	
 
+	/*
+
+	I don't know
+	
 	tmp = MAKE_NODE(NULL, n, buf);
 
 	if(!tmp) {
 		return ERR;
 	}
+	*/
 
-	while(*list && (res = cmp((*list)->buf, buf)) > 0) {
+	while(*list && (res = cmp((*list)->buf, key)) > 0) {
 		list = &(*list)->next;
 	}
 
@@ -458,12 +463,6 @@ int slinkedlist_add_unique(SLinkedList *list, const void *elem, size_t n, cmp_fn
 		return ERR;
 	}	
 
-	tmp = MAKE_NODE(NULL, n, elem);
-
-	if(!tmp) {
-		return ERR;
-	}
-
 	while(*list && (res = cmp((*list)->buf, elem)) > 0) {
 		list = &(*list)->next;
 	}
@@ -476,6 +475,12 @@ int slinkedlist_add_unique(SLinkedList *list, const void *elem, size_t n, cmp_fn
 		}
 
 		return OK;
+	}
+
+	tmp = MAKE_NODE(NULL, n, elem);
+
+	if(!tmp) {
+		return ERR;
 	}
 
 	tmp->next = *list;
@@ -632,6 +637,20 @@ int slinkedlist_ord_search(const SLinkedList *list, const void *key, cmp_fn cmp)
 	}
 
 	return i;	
+}
+
+int slinkedlist_print(const SLinkedList *list, print_fn print)
+{
+	if(!list || !print) {
+		return ERR;
+	}	
+
+	while(*list) {
+		print((*list)->buf);
+		list = &(*list)->next;
+	}
+
+	return OK;
 }
 
 /*
