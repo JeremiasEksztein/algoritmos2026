@@ -20,13 +20,13 @@ int computer_eq(const Computer *lhs, const Computer *rhs)
 
 void computer_show(const Computer *c)
 {
-	printf("CPU: %s\tGPU: %s\tRAM: %s\tMIPS: %lu\n", c->cpu, c->gpu, c->ram, c->mips);
+	printf("CPU: %-*s\tGPU: %-*s\tRAM: %-*s\tMIPS: %lu\n", 21, c->cpu, 21, c->gpu, 21, c->ram, c->mips);
 }
 
 int computer_print(const void *data)
 {
 	const Computer *c = data;
-	printf("CPU: %s\tGPU: %s\tRAM: %s\tMIPS: %lu\n", c->cpu, c->gpu, c->ram, c->mips);
+	printf("CPU: %-*s\tGPU: %-*s\tRAM: %-*s\tMIPS: %lu\n", 21, c->cpu, 21, c->gpu, 21, c->ram, c->mips);
 	return 0;
 }
 
@@ -35,7 +35,7 @@ int computer_cmp(const void *lhs, const void *rhs)
 	const Computer *a = lhs;
 	const Computer *b = rhs;
 
-	return strcmp(a->ram, b->ram);
+	return a->mips - b->mips;
 }
 
 static Computer arr[50] = {

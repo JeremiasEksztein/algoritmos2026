@@ -139,6 +139,8 @@ void slinkedlist_destroy(SLinkedList *list);
 As taught by the professor. The DList is a pointer to the last recently used node.
 I guess that makes it more cache friendly? If a bit more complicated in general
 to get the lenght of a dlist I think you could get it in O(N/2) instead of O(N)
+best case scenario, worst case scenario still is O(N) so
+average case is bound O(N/2) < O(X) < O(N)
 */
 typedef struct DNode DNode;
 struct DNode {
@@ -175,7 +177,7 @@ int dlinkedlist_add_ordered(DLinkedList *list, const void *buf, size_t n, cmp_fn
 int dlinkedlist_rem_ordered(DLinkedList *list, void *buf, size_t n, const void *key, cmp_fn cmp);
 
 int dlinkedlist_add_unique(DLinkedList *list, const void *buf, size_t n, cmp_fn cmp, unique_fn unique, void *user);
-int dlinkedlist_rem_unique(DLinkedList *list, void *buf, size_t n, cmp_fn cmp, unique_fn unique, void *user);
+int dlinkedlist_rem_unique(DLinkedList *list, void *buf, size_t n, const void *key, cmp_fn cmp, unique_fn unique, void *user);
 
 int dlinkedlist_sort(DLinkedList *list, cmp_fn cmp);
 int dlinkedlist_lsearch(const DLinkedList *list, const void *key, cmp_fn cmp);
