@@ -40,6 +40,58 @@ static void DELETE_NODE(Node *node)
 	free(node->buf);
 	free(node);
 }
+/*
+static Node *merge_sort(Node *node, cmp_fn cmp);
+static Node *merge(Node *lo, Node *hi, cmp_fn cmp);
+
+static Node *merge_sort(Node *node, cmp_fn cmp)
+{
+	Node *slow = node, *fast = node, *mid = NULL;
+	
+	if(!node) {
+		return NULL;
+	}	
+	
+	if(!node->next) {
+		return node;
+	}
+
+	while(fast->next && fast->next->next) {
+		slow = slow->next;
+		fast = fast->next->next;
+	}
+	
+	while(fast && fast->next) {
+		fast = fast->next->next;
+		if(fast) {
+			slow = slow->next;
+		}
+	}
+
+	mid = slow->next;
+	slow->next = NULL;
+
+	return merge(merge_sort(node, cmp), merge_sort(mid, cmp), cmp);
+}
+
+static Node *merge(Node *lo, Node *hi, cmp_fn cmp)
+{
+	if(!hi) {
+		return lo;
+	}
+	if(!lo) {
+		return hi;
+	}
+
+	if(cmp(lo->buf, hi->buf) >= 0) {
+		lo->next = merge(lo->next, hi, cmp);
+		return lo;
+	} 
+	
+	hi->next = merge(lo, hi->next, cmp);
+
+	return hi;
+}*/
 
 int slinkedlist_new(SLinkedList *list)
 {
@@ -366,107 +418,36 @@ int slinkedlist_add_unique(SLinkedList *list, const void *elem, size_t n, cmp_fn
 	return OK;			
 }
 
-/*
-No real idea what this even means
-int slinkedlist_rem_unique(SLinkedList *list, void *buf, size_t n, cmp_fn cmp, unique_fn unique, void *user);
+/* 
+Got literally zero clue what this is
+Think its some sort of selection sort?	
 */
-
-
-
-/*
-	desired = 10 -> 9 -> 7 -> 6 -> 1 -> nil
-
-	1 -> 7 -> 10 -> 9 -> 6 -> nil
-	
-	fn sort(l, ord) { 
-		start := l
-		tmp := nil
-
-		while start != nil {
-			best := start
-			tmp := start->next
-			
-			while tmp != nil {
-				if ord(best, tmp) <= 0 {
-					best := tmp
-				}
-				tmp := tmp->next
-			}
-
-			tmp := start
-			start := best
-			best := tmp		
-
-			start := start->next	
-		}
-	}
-
-	1 -> 7 -> 10 -> 9 -> 6 -> nil
-
-	fn merge_sort(l, cmp) {
-		lo := nil
-		hi := nil
-		n := 0
-		i := 0
-
-		while l != nil {
-			l = l.next
-			n := n + 1
-		}
-
-		if n <= 1 {
-			return l
-		}
-
-		while l != nil {
-			if i < (n / 2) {
-				append(lo, l)
-			} else {
-				append(hi, l)
-			}
-
-			i := i + 1
-		}
-	
-		merge(merge_sort(lo, cmp), merge_sort(hi, cmp), cmp)
-	}
-
-	fn merge(lo, hi, cmp) {
-		res := nil
-		
-		while lo != nil && hi != nil {
-			if cmp(lo, hi) >= 0 {
-				append(res, lo)
-				lo := lo.next
-			} else {
-				append(res, hi)
-				hi := hi.next
-			}
-		}
-
-		while lo != nil {
-			append(res, lo)
-			lo := lo.next
-		} 
-		while hi != nil {
-			append(res, hi)
-			hi := hi.next
-		}
-
-		return res
-	}
-
-	fn append(dst, src) {
-		if dst != nil {
-			dst := src
-		}
-		dst.next := src
-	}
-*/
-
 int slinkedlist_sort(SLinkedList *list, cmp_fn cmp)
 {
-	merge_sort(*list, cmp);
+	SLinkedList *first = list, *q;
+	Node *tmp;
+
+	if(!*list) {
+		return OK;
+	}
+
+	while((*list)->next) {
+		if(cmp((*list)->buf, (*list)->next->buf) > 0) {
+			q = first;
+			tmp = (*list)->next;
+
+			(*list)->next = tmp->next;
+
+			while(cmp((*q)->buf, tmp->buf) > 0) {
+				q = &(*q)->next;
+			}
+
+			tmp->next = *q;
+			*q = tmp;
+		} else {
+			list = &(*list)->next;
+		}
+	}
 
 	return OK;
 }
