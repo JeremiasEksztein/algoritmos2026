@@ -241,6 +241,8 @@ int main(void)
 
 	puts("\n");
 	slinkedlist_print(&l, print_int);
+	printf("\n");
+	slinkedlist_rev_print(&l, print_int);
 
 	slinkedlist_sort(&l, cmp_int);
 

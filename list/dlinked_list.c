@@ -602,6 +602,7 @@ void dlinkedlist_destroy(DLinkedList *list)
 
 		tmp = next;
 		next = next->next;
+		
 		DELETE_NODE(tmp);
 	}
 

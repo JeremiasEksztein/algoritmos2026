@@ -41,59 +41,6 @@ static void DELETE_NODE(Node *node)
 	free(node);
 }
 
-/*
-static Node *merge_sort(Node *node, cmp_fn cmp);
-static Node *merge(Node *lo, Node *hi, cmp_fn cmp);
-
-static Node *merge_sort(Node *node, cmp_fn cmp)
-{
-	Node *slow = node, *fast = node, *mid = NULL;
-	
-	if(!node) {
-		return NULL;
-	}	
-	
-	if(!node->next) {
-		return node;
-	}
-
-	while(fast->next && fast->next->next) {
-		slow = slow->next;
-		fast = fast->next->next;
-	}
-	
-	while(fast && fast->next) {
-		fast = fast->next->next;
-		if(fast) {
-			slow = slow->next;
-		}
-	}
-
-	mid = slow->next;
-	slow->next = NULL;
-
-	return merge(merge_sort(node, cmp), merge_sort(mid, cmp), cmp);
-}
-
-static Node *merge(Node *lo, Node *hi, cmp_fn cmp)
-{
-	if(!hi) {
-		return lo;
-	}
-	if(!lo) {
-		return hi;
-	}
-
-	if(cmp(lo->buf, hi->buf) >= 0) {
-		lo->next = merge(lo->next, hi, cmp);
-		return lo;
-	} 
-	
-	hi->next = merge(lo, hi->next, cmp);
-
-	return hi;
-}*/
-
 int slinkedlist_new(SLinkedList *list)
 {
 	if(!list) {
@@ -511,35 +458,6 @@ int slinkedlist_print(const SLinkedList *list, print_fn print)
 
 	return OK;
 }
-
-int slinkedlist_rev_print(const SLinkedList *list, print_fn print)
-{
-	if(!list || !print) {
-		return ERR;
-	}
-
-	if(*list == NULL) {
-		return OK;
-	}
-
-	slinkedlist_rev_print(&(*list)->next, print);
-	print((*list)->buf);
-
-	return OK;
-}
-
-/*
-int slinkedlist_copy(SLinkedList *dst, SLinkedList *src);
-int slinkedlist_concat(SLinkedList *dst, SLinkedList *src);
-int slinkedlist_concatv(SLinkedList *dst, ...);
-
-int slinkedlist_map(SLinkedList *dst, SLinkedList *src, map_fn map, void* user);
-int slinkedlist_filter(SLinkedList *dst, SLinkedList *src, filter_fn filter, void *user);
-int slinkedlist_reduce(void *reduction, SLinkedList *src, reduce_fn reduce, void *user);
-int slinkedlist_foreach(SLinkedList *list, foreach_fn foreach, void *user);
-
-int slinkedlist_into_iter(SLinkedList *list, ListIterator *iter);
-*/
 
 void slinkedlist_destroy(SLinkedList *list)
 {
