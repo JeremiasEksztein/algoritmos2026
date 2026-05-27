@@ -1,4 +1,5 @@
 #include "list.h"
+#include "../stack/stack.h"
 
 static Node *MAKE_NODE(Node *next, size_t n, const void *buf);
 static void DELETE_NODE(Node *node);
@@ -537,6 +538,8 @@ void slinkedlist_rev_print(const SLinkedList *list, print_fn print)
 		linkedstack_pop(&stk, node, sizeof(Node*));
 		print(node->buf);
 	}
+
+	linkedstack_destroy(&stk);
 }
 #else
 void slinkedlist_rev_print(const SLinkedList *list, print_fn print)
