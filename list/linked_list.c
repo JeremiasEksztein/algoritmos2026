@@ -512,20 +512,18 @@ int slinkedlist_print(const SLinkedList *list, print_fn print)
 	return OK;
 }
 
-int slinkedlist_rev_print(const SLinkedList *list, print_fn print)
+void slinkedlist_rev_print(const SLinkedList *list, print_fn print)
 {
 	if(!list || !print) {
-		return ERR;
+		return;
 	}
 
 	if(*list == NULL) {
-		return OK;
+		return;
 	}
 
 	slinkedlist_rev_print(&(*list)->next, print);
 	print((*list)->buf);
-
-	return OK;
 }
 
 /*
