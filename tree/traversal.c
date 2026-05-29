@@ -18,8 +18,8 @@ static void preorder(const BinarySearchTree *tree, print_fn print)
 	}	
 
 	print((*tree)->buf);
-	preorder(&(*tree)->left, print);
 	preorder(&(*tree)->right, print);
+	preorder(&(*tree)->left, print);
 }
 
 static void postorder(const BinarySearchTree *tree, print_fn print)
@@ -28,8 +28,8 @@ static void postorder(const BinarySearchTree *tree, print_fn print)
 		return;
 	}	
 
-	postorder(&(*tree)->left, print);
 	postorder(&(*tree)->right, print);
+	postorder(&(*tree)->left, print);
 	print((*tree)->buf);
 }
 

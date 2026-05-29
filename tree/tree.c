@@ -113,16 +113,42 @@ int binarysearchtree_remove_i(BinarySearchTree *tree, const void *key, void *buf
 int binarysearchtree_remove_r(BinarySearchTree *tree, const void *key, void *buf, size_t n, cmp_fn cmp)
 {
 	int compar;
+	Node *tmp, *replace;
 	
 	if(*tree) {
 		compar = cmp((*tree)->buf, key);
 
 		if(compar > 0) {
-			return binarysearchtree_search_r(&(*tree)->left, key, buf, n, cmp);
+			return binarysearchtree_remove_r(&(*tree)->right, key, buf, n, cmp);
 		} else if(compar < 0) {
-			return binarysearchtree_search_r(&(*tree)->left, key, buf, n, cmp);	
+			return binarysearchtree_remove_r(&(*tree)->left, key, buf, n, cmp);	
 		} else {
 			memcpy(buf, (*tree)->buf, MIN((*tree)->n, n));
+
+			tmp = *tree;
+
+			if(!(*tree)->left && !(*tree)->right) {
+				*tree = NULL;
+			} else if((*tree)->left) {
+				*tree = tmp->left;
+			} else if((*tree)->right) {
+				*tree = tmp->right;
+			} else {
+				replace = tmp->right;
+
+				while(replace->left) {
+					replace = replace->left;
+				}
+
+				*tree = replace;
+				replace->left = tmp->left;
+				replace->right = tmp->right;
+			}
+
+			/* do something here */ 
+
+			free(tmp->buf);
+			free(tmp);
 			
 			return OK;
 		}
@@ -144,7 +170,6 @@ int binarysearchtree_search_i(const BinarySearchTree *tree, const void *key, voi
 			tree = &(*tree)->left;
 		} else {
 			memcpy(buf, (*tree)->buf, MIN((*tree)->n, n));
-
 			return OK;
 		}
 	}	
@@ -196,8 +221,8 @@ int binarysearchtree_min(const BinarySearchTree *tree, void *buf, size_t n)
 		return ERR;
 	}	
 
-	while((*tree)->left) {
-		tree = &(*tree)->left;
+	while((*tree)->right) {
+		tree = &(*tree)->right;
 	}
 
 	memcpy(buf, (*tree)->buf, MIN((*tree)->n, n));
@@ -211,8 +236,8 @@ int binarysearchtree_max(const BinarySearchTree *tree, void *buf, size_t n)
 		return ERR;
 	}	
 
-	while((*tree)->right) {
-		tree = &(*tree)->right;
+	while((*tree)->left) {
+		tree = &(*tree)->left;
 	}
 
 	memcpy(buf, (*tree)->buf, MIN((*tree)->n, n));
@@ -227,7 +252,7 @@ void binarysearchtree_destroy(BinarySearchTree *tree)
 	}
 
 	binarysearchtree_destroy(&(*tree)->left);
-	binarysearchtree_destroy(&(*tree)->left);
+	binarysearchtree_destroy(&(*tree)->right);
 
 	free((*tree)->buf);
 	free(*tree);
