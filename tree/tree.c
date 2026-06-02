@@ -113,8 +113,8 @@ int binarysearchtree_remove_i(BinarySearchTree *tree, const void *key, void *buf
 int binarysearchtree_remove_r(BinarySearchTree *tree, const void *key, void *buf, size_t n, cmp_fn cmp)
 {
 	int compar;
-	Node *tmp, *replace;
-	
+	Node *tmp, *aux;
+		
 	if(*tree) {
 		compar = cmp((*tree)->buf, key);
 
@@ -126,30 +126,27 @@ int binarysearchtree_remove_r(BinarySearchTree *tree, const void *key, void *buf
 			memcpy(buf, (*tree)->buf, MIN((*tree)->n, n));
 
 			tmp = *tree;
-
-			if(!(*tree)->left && !(*tree)->right) {
-				*tree = NULL;
-			} else if((*tree)->left) {
-				*tree = tmp->left;
-			} else if((*tree)->right) {
-				*tree = tmp->right;
+			
+			if(!(*tree)->left) {
+				*tree = (*tree)->right;
+			} else if(!(*tree)->right) {
+				*tree = (*tree)->left;
 			} else {
-				replace = tmp->right;
+				aux = tmp->right;
 
-				while(replace->left) {
-					replace = replace->left;
+				while(aux->left) {
+					aux = aux->left;
 				}
 
-				*tree = replace;
-				replace->left = tmp->left;
-				replace->right = tmp->right;
+				*tree = aux;
+				aux->left = tmp->left;
+				aux->right = tmp->right;
 			}
-
-			/* do something here */ 
 
 			free(tmp->buf);
 			free(tmp);
-			
+			tmp = NULL;
+
 			return OK;
 		}
 	}

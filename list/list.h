@@ -200,4 +200,10 @@ int dlinkedlist_into_iter(DLinkedList *list, Iterator *iter);
 
 void dlinkedlist_destroy(DLinkedList *list);
 
+typedef Node *CDLinkedList;
+
+void cdlinkedlist_new(CDLinkedList *l);
+
+void cdlinkedlist_destroy(CDLinkedList *l);
+
 #endif
