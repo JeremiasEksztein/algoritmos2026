@@ -66,11 +66,16 @@ size_t binarysearchtree_size(const BinarySearchTree *tree)
 
 size_t binarysearchtree_height(const BinarySearchTree *tree)
 {
+	size_t hl, hr;
+	
 	if(!tree || !*tree) {
 		return 0;
 	}
 
-	return MAX(binarysearchtree_height(&(*tree)->left), binarysearchtree_height(&(*tree)->right)) + 1;
+	hl = binarysearchtree_height(&(*tree)->left);
+	hr = binarysearchtree_height(&(*tree)->right);
+
+	return MAX(hl, hr) + 1;
 }
 
 size_t binarysearchtree_leaves(const BinarySearchTree *tree)

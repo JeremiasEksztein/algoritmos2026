@@ -87,9 +87,21 @@ int binarysearchtree_add_r(BinarySearchTree *tree, const void *elem, size_t n, c
 	return OK;	
 }
 
+static void splice(BinarySearchTree *tree)
+{
+	if((*tree)->left) {
+		*tree = (*tree)->left;
+	} else {
+		*tree = (*tree)->right;
+	}
+
+	
+}
+
 int binarysearchtree_remove_i(BinarySearchTree *tree, const void *key, void *buf, size_t n, cmp_fn cmp)
 {
 	int compar;
+	Node *tmp;
 
 	while(*tree) {
 		compar = cmp((*tree)->buf, key);
@@ -100,12 +112,20 @@ int binarysearchtree_remove_i(BinarySearchTree *tree, const void *key, void *buf
 			tree = &(*tree)->left;
 		} else {
 			memcpy(buf, (*tree)->buf, MIN((*tree)->n, n));
+			
+			tmp = (*tree); 
 
-			/* What to do here? */
-
-			return OK;
-		}
-	}	
+			if(!(*tree)->left || !(*tree)->right) {
+				splice(tree);
+			} else {
+				tmp = &(*tree)->right;
+				while((*tmp)->left) {
+					tmp = &(*tmp)->left;
+				}
+				splice(tree);
+			}
+			
+		}	
 
 	return ERR;	
 }
