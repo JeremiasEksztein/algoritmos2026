@@ -123,7 +123,7 @@ int slinkedlist_concat(SLinkedList *dst, SLinkedList *src);
 int slinkedlist_concatv(SLinkedList *dst, ...);
 
 int slinkedlist_print(const SLinkedList *list, print_fn print);
-int slinkedlist_rev_print(const SLinkedList *list, print_fn print);
+void slinkedlist_rev_print(const SLinkedList *list, print_fn print);
 
 int slinkedlist_map(SLinkedList *dst, SLinkedList *src, map_fn map, void* user);
 int slinkedlist_reverse(SLinkedList *dst, SLinkedList *src);
@@ -203,6 +203,8 @@ void dlinkedlist_destroy(DLinkedList *list);
 typedef Node *CDLinkedList;
 
 void cdlinkedlist_new(CDLinkedList *l);
+
+
 
 void cdlinkedlist_destroy(CDLinkedList *l);
 

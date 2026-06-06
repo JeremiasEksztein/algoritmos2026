@@ -3,24 +3,23 @@
 #include <stdlib.h>
 
 #define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720 
+#define WINDOW_HEIGHT 720
 #define WINDOW_NAME "window_test"
 
-int main(void)
-{
-	int exit_code = EXIT_FAILURE;
+int main(void) {
+  int exit_code = EXIT_FAILURE;
 
-	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
+  InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
 
-	while(!WindowShouldClose()) {
-		BeginDrawing();
-		
-		EndDrawing();
-	}
+  while (!WindowShouldClose()) {
+    BeginDrawing();
 
-	CloseWindow();
+    EndDrawing();
+  }
 
-	exit_code = EXIT_SUCCESS;
-	
-	return exit_code;
+  CloseWindow();
+
+  exit_code = EXIT_SUCCESS;
+
+  return exit_code;
 }

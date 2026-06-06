@@ -21,6 +21,7 @@ const char *_board[] = {
 	"P",
 	".",
 	"V",
+	".",
 	"S",
 	"T",
 	".",
@@ -32,7 +33,8 @@ const char *_board[] = {
 	"T",
 	".",
 	".",
-	".",	
+	".",
+	"."
 };
 
 /* Thing */
@@ -329,8 +331,8 @@ void game_uninit(struct Game *game);
 
 int main(void)
 {
-	struct Game GameContext;
 
+	struct Game GameContext;
 	if(game_init(&GameContext) != 0) {
 		fprintf(stderr, "Error: init failed!\n");
 		return 1;

@@ -14,7 +14,7 @@ int cmp_int(const void *lhs, const void *rhs)
 
 	return *l - *r;
 }
-/*
+
 #define COLOR_BLUE "\x1b[34"
 #define COLOR_RED "\x1b[31"
 #define COLOR_YELLOW "\x1b[33"
@@ -55,6 +55,7 @@ void handle_user_input(SLinkedList *list, int input)
 	switch(input) {
 		case 1:
 			printf("Creating list\n");
+			slinkedlist_destroy(list);
 			slinkedlist_new(list);
 			printf("List created\n");
 			break;
@@ -201,6 +202,8 @@ int main(void)
 	slinkedlist_destroy(&l);
 
 	return 0;
+}
+/*
 	
 	Computer tmp;
 	int i;
@@ -227,7 +230,7 @@ int main(void)
 	return 0;
 */
 
-
+/*
 int main(void)
 {
 	SLinkedList l;
@@ -253,3 +256,4 @@ int main(void)
 
 	return 0;
 }
+*/

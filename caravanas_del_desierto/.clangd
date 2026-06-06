@@ -1,0 +1,8 @@
+CompileFlags:
+	Add: [
+		"-Iinclude",
+		"-std=C99",
+		"-Wall",
+		"-Werror,"
+		"-pedantic"
+]
