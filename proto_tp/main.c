@@ -1,38 +1,57 @@
 #define _GNU_SOURCE
+/* libc headers */
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <time.h>
 #include <errno.h>
 
+/* UNIX headers */
+
 #include <unistd.h>
 #include <termios.h>
+
+/* Defines */
 
 #define OK 0
 #define ERR 1
 
-typedef struct sNode tNode;
-struct sNode {
-	tNode *next;
+#define MIN(x, y) (((x) > (y)) ? (y) : (x))
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+
+/* Data Structures */
+
+typedef struct sListNode tListNode;
+struct sListNode {
+	tListNode *next;
 	size_t n;
 	void *buf;
 };
 
-typedef tNode *tSLinkedList;
+typedef tListNode *tSLinkedList;
 
 typedef struct {
-	tNode *front, *back;
+	tListNode *front, *back;
 } tQueue;
 
-typedef struct sNode2 tNode2;
-struct sNode2 {
-	tNode2 *next, *prev;
+typedef struct sDListNode tDListNode2;
+struct sDListNode {
+	tDListNode *next, *prev;
 	size_t n;
 	void *buf;
 };
 
-typedef tNode2 *tCDLinkedList;
-typedef tNode2 *BinarySearchTree;
+typedef tDListNode *tCDLinkedList;
+
+typedef struct sTreeNode tTreeNode {
+	tTreeNode *left, *right;
+	size_t n;
+	void *buf;
+};
+
+typedef tTreeNode *BinarySearchTree;
+
+/* Terminal */ 
 
 typedef struct termios tTerm;
 
@@ -69,7 +88,7 @@ int disable_raw_mode(tTerm *old)
 	return OK;
 }
 
-typedef struct timespec tTimeSpec;
+/* Thing */
 
 #define STUNNED 	0x1
 #define IMMORTAL 	0x2
@@ -123,6 +142,8 @@ tThing *bandit_new(void)
 
 	return new;
 }
+
+/* Place & Board */
 
 #define PLAYERHERE 0x1
 #define CAMP 0x2
@@ -184,7 +205,31 @@ void place_detach(tPlace *place, tThing *thing)
 typedef tPlace *tBoard;
 
 const char *placeholder[] = {
-#include "placeholder.inc"
+			"IJ",
+			".",
+			"P",
+			"T",
+			".",
+			"B",
+			"O",
+			".",
+			"P",
+			".",
+			"V",
+			".",
+			"S",
+			"T",
+			".",
+			"O",
+			"B",
+			".",
+			"P",
+			".",
+			"T",
+			".",
+			".",
+			".",
+			"."	
 };
 
 int board_append(tBoard *board, tPlace *place)
@@ -256,6 +301,9 @@ int board_init(tBoard *board)
 	return OK;
 }
 
+/* Game State */
+
+typedef struct timespec tTimeSpec;
 
 typedef struct {
 	tTerm old;
@@ -374,6 +422,8 @@ void game_draw(tGameContext *game)
 }
 
 void game_uninit(tGameContext *game);
+
+/* Main Function */
 
 int main(void)
 {
