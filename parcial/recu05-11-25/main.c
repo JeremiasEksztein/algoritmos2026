@@ -55,7 +55,8 @@ int main(void)
 		eprintf("[INFO] : %s\n", buf);
 		readLine(buf, &op, &tmp);
 
-		eprintf("%d\n", op);
+		eprintf("[INFO]: ID: %s || COMPANY: %s\n", tmp.id, tmp.company);
+
 		if(op == IN) {
 			ret = handleInboundContainer(depot, &tmp);
 		} else {

@@ -134,6 +134,7 @@ int handleOutboundContainer(tStack depot[], const tContainer *container)
 
 		if(eq) {
 			done = 1;
+			break;
 		}
 
 		++i;

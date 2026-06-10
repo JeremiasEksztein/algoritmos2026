@@ -4,6 +4,14 @@ CFLAGS = -Wall -Werror -Wextra -std=c89 -pedantic -g -fsanitize=address,undefine
 all: *.c
 	$(CC) $(CFLAGS) $^
 
+test:
+	./a.out
+	echo 'Ingresos.txt'
+	cat ingresos.txt
+	cat egresos.txt
+	cat anomalias.txt
+	cat estado_almacen.txt
+
 clean:
 	rm -f a.out 
 	rm -f ingresos.txt
