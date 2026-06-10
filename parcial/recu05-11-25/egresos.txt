@@ -1,0 +1,2 @@
+[SUCCESS] : Se egreso con exito el contenedor
+	[INFO] : De la compañia: E1 con ID: 10

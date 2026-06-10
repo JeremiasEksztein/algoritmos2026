@@ -1,0 +1,6 @@
+[SUCCESS] : Se ingreso con exito el contenedor
+	[INFO] : De la compañia: E1 con ID: 10
+[SUCCESS] : Se ingreso con exito el contenedor
+	[INFO] : De la compañia: BinGroup con ID: 1101
+[SUCCESS] : Se ingreso con exito el contenedor
+	[INFO] : De la compañia: E1 con ID: 10
