@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1781098453 source:c:\users\laboratorios\desktop\trabajopractico\clase-09-41\main.c
+	<stdio.h>
+	<stddef.h>
+	<assert.h>
+	"tree.h"
+
+1781097557 c:\users\laboratorios\desktop\trabajopractico\clase-09-41\tree.h
+	<stdlib.h>
+	<string.h>
+
+1781098679 source:c:\users\laboratorios\desktop\trabajopractico\clase-09-41\tree.c
+	"tree.h"
+
