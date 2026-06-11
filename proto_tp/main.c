@@ -34,6 +34,14 @@ typedef struct {
 	tListNode *front, *back;
 } tQueue;
 
+void queue_new(tQueue *q);
+int queue_add(tQueue *q, const void *elem, size_t n);
+int queue_rem(tQueue *q, void *buf, size_t n);
+int queue_front(const tQueue *q, void *buf, size_t n);
+int queue_is_empty(const tQueue *q);
+/*int queue_is_full(const tQueue *q, size_t n);*/
+void queue_destroy(tQueue *q);
+
 typedef struct sDListNode tDListNode2;
 struct sDListNode {
 	tDListNode *next, *prev;
@@ -42,6 +50,12 @@ struct sDListNode {
 };
 
 typedef tDListNode *tCDLinkedList;
+
+void cdlinkedlist_new(tCDLinkedList *c);
+
+int cdlinkedlist_add(tCDLinkedList *c, const void *elem, size_t n);
+
+void cdlinkedlist_destroy(tCDLinkedList *c);
 
 typedef struct sTreeNode tTreeNode {
 	tTreeNode *left, *right;

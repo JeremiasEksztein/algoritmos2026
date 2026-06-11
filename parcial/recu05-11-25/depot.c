@@ -113,11 +113,11 @@ int handleInboundContainer(tStack depot[], const tContainer *container)
 int handleOutboundContainer(tStack depot[], const tContainer *container)
 {
 	tContainer tmp;
-	int i = 0, eq = 1, done = 0;
+	int i = 0, eq = 0, done = 0;
 	
 
 	while(i < 3 && !done) {
-		while(!stackIsEmpty(depot + i)) {
+		while(!stackIsEmpty(depot + i) && !eq) {
 			stackPop(depot + i, &tmp, sizeof(tContainer));
 
 			eq = containerEq(container, &tmp); 

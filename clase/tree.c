@@ -4,6 +4,45 @@ static void _splice(tBinaryTree *t);
 static tNode **_binarytree_min(tBinaryTree *t);
 static tNode **_binarytree_max(tBinaryTree *t);
 
+static void _mut_inorder(tBinaryTree *t, visit_fn, void *user);
+static void _mut_preorder(tBinaryTree *t, visit_fn, void *user);
+static void _mut_postorder(tBinaryTree *t, visit_fn, void *user);
+
+static void _mut_inorder(tBinaryTree *t, visit_fn visit, void *user)
+{
+    if(!*t) {
+        return;
+    }
+
+    _mut_inorder(&(*t)->left, visit, user);
+    visit((*t)->buf, user);
+    _mut_inorder(&(*t)->right, visit, user);
+}
+
+static void _mut_preorder(tBinaryTree *t, visit_fn visit, void *user)
+{
+    if(!*t) {
+        return;
+    }
+
+    visit((*t)->buf, user);
+    _mut_preorder(&(*t)->left, visit, user);
+    _mut_preorder(&(*t)->right, visit, user);
+}
+
+
+static void _mut_postorder(tBinaryTree *t, visit_fn visit, void *user)
+{
+    if(!*t) {
+        return;
+    }
+
+    _mut_postorder(&(*t)->left, visit, user);
+    _mut_postorder(&(*t)->right, visit, user);
+    visit((*t)->buf, user);
+}
+
+
 static void _inorder(const tBinaryTree *t, print_fn print)
 {
     if(!*t) {
@@ -145,7 +184,7 @@ int binarytree_search(const tBinaryTree *t, const void *key, void *buf, unsigned
 {
     int compar;
 
-    if(!t || !*t || !key || !buf || cmp) {
+    if(!t || !*t || !key || !buf || !cmp) {
         return 1;
     }
 
@@ -241,6 +280,25 @@ void binarytree_print(const tBinaryTree *t, int type, print_fn print)
         break;
     case POSTORDER:
         _postorder(t, print);
+        break;
+    }
+}
+
+void binarytree_visit(tBinaryTree *t, int type, visit_fn visit, void *user)
+{
+    if(!t || !*t || !visit) {
+        return;
+    }
+
+    switch(type) {
+    case INORDER:
+        _mut_inorder(t, visit, user);
+        break;
+    case PREORDER:
+        _mut_preorder(t, visit, user);
+        break;
+    case POSTORDER:
+        _mut_postorder(t, visit, user);
         break;
     }
 }

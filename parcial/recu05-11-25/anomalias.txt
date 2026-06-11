@@ -1,2 +1,2 @@
 [ERROR] : Codigo de anomalia CID 'Contenedor Inexistente'
-	[INFO] : Ingresando contenedor de la compañia: E1 con ID: 10
+	[INFO] : Ingresando contenedor de la compañia: E4 con ID: 40

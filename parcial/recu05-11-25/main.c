@@ -52,10 +52,10 @@ int main(void)
 	}
 
 	while(fgets(buf, 21, fpMovements)) {
-		eprintf("[INFO] : %s\n", buf);
+		/*eprintf("[INFO] : %s\n", buf);*/
 		readLine(buf, &op, &tmp);
 
-		eprintf("[INFO]: ID: %s || COMPANY: %s\n", tmp.id, tmp.company);
+		/*eprintf("[INFO]: ID: %s || COMPANY: %s\n", tmp.id, tmp.company);*/
 
 		if(op == IN) {
 			ret = handleInboundContainer(depot, &tmp);
@@ -101,7 +101,6 @@ int main(void)
 				);
 				break;
 		}
-
 		memset(&tmp, 0, sizeof(tContainer));
 	}
 

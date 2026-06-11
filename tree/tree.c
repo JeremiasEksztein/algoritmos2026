@@ -98,6 +98,8 @@ static void splice(BinarySearchTree *tree)
 	
 }
 
+
+
 int binarysearchtree_remove_i(BinarySearchTree *tree, const void *key, void *buf, size_t n, cmp_fn cmp)
 {
 	int compar;
