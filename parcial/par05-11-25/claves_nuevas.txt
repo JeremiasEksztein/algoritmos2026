@@ -1,0 +1,9 @@
+Cd a
+
+()()()()
+()[]{}
+{([])}
+
+nequen
+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwzyz012
+
