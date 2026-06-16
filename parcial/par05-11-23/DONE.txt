@@ -1,0 +1,5 @@
+Basicamente mi idea es correcta
+cargo el .dat en un arbol binario de busqueda
+con una funcion para insertar o modificar si ya existe la clave
+lo recorro en inorden con un contexto grabando en disco el acumulado por cada clave 
+y al final imprimo la deuda total.

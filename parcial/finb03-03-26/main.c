@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include "common.h"
-#include "list.h"
+#include "bst.h"
 #include "queue.h"
 #include "package.h"
 
@@ -37,23 +37,11 @@ int openFiles(
 	return OK;
 }
 
-void deleteAll(tLinkedList *ll)
-{
-	tLinkedQueue q;
-	
-	while(!linkedListIsEmpty(ll)) {
-		linkedListRemlo(ll, &q, sizeof(tLinkedQueue));
-		linkedQueueDelete(&q);
-	}
-
-	linkedListDelete(ll);
-}
-
 int main(void)
 {
 	FILE *fpOperaciones, *fpIneficientes, *fpPendientes;
 	tPackage package;
-	tLinkedList ll;
+	tBinaryTree t;
 	tLinkedQueue q;
 	char buf[BUFSIZE], *i;
 	int k, d, totalDispatched;
@@ -69,6 +57,8 @@ int main(void)
 
 	sscanf(buf, "%d,%d\n", &k, &d);
 
+	initQueueingSystem(&t, d);
+	
 	while(fgets(buf, BUFSIZE, fpOperaciones)) {
 		if(!(i = strrchr(buf, '\n'))) {
 			fclose(fpOperaciones);
@@ -81,7 +71,10 @@ int main(void)
 
 		if(strncmp(i, "ING", 3)) {
 			sscanf(i, "ING|%[^|]|%u|%c\n", package.code, &package.dest, &package.type); /* scanPackage()? */
-			linkedListInsert(&ll, &package, sizeof(tPackage), packageCmp, TRUE, packageEnqueue);
+
+			handleIncoming(&t, &package);
+			
+			/*linkedListInsert(&ll, &package, sizeof(tPackage), packageCmp, TRUE, packageEnqueue);*/
 		} else if(strncmp(i, "DES", 3)) {
 			sscanf(i, "DES|%d\n", &package.dest);
 			linkedListFind(&ll, &package, &q, sizeof(tLinkedQueue), packageCmp);
@@ -120,6 +113,7 @@ int main(void)
 		linkedListRemlo(&ll, &q, sizeof(tLinkedQueue));
 		while(!linkedQueueIsEmpty(&q)) {
 			linkedQueueRem(&q, &package, sizeof(tPackage));
+			
 			fprintf(
 				fpPendientes,
 				"ING|%s|%d|%c\n", 

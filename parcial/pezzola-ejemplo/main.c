@@ -1,96 +1,66 @@
 #include <stdio.h>
-#include <stdlib.h>
 
-#include "alumno.h"
-#include "arbol.h"
+#include "common.h"
+#include "tree.h"
+#include "student.h"
 
-typedef void (*print_fn)(const void*);
-
-void print_alumno(const void *a)
+void showMenuHeader(void)
 {
-	const tAlumno *alum = a;
-
-	printf(
-		"%8d|%-*s|%d|%-*s|%02d\n", 
-		alum->dni, 
-		11, alum->materia, 
-		alum->anio,
-		7, alum->periodo,
-		alum->nota
-	);
+	
 }
 
-static void prettyPrintRec2(
-    const tNodo *nodo,
-    const char *prefijo,
-    int esUltimo,
-    print_fn print)
+void handleInput(int input, tBinaryTree *data)
 {
-    if (!nodo)
-        return;
+	tStudent key, read;
 
-    printf("%s", prefijo);
-    printf("%s", esUltimo ? "└── " : "├── ");
+	key.id = input;
 
-    print(nodo->buf);
-    printf("\n");
-
-    char nuevoPrefijo[256];
-    snprintf(
-        nuevoPrefijo,
-        sizeof(nuevoPrefijo),
-        "%s%s",
-        prefijo,
-        esUltimo ? "    " : "│   "
-    );
-
-    if (nodo->izq || nodo->der) {
-        prettyPrintRec2(nodo->izq, nuevoPrefijo, nodo->der == NULL, print);
-        prettyPrintRec2(nodo->der, nuevoPrefijo, 1, print);
-    }
-}
-
-void prettyPrintArbol(const tArbol arbol, print_fn print)
-{
-    if (!arbol) {
-        puts("(árbol vacío)");
-        return;
-    }
-
-    print(arbol->buf);
-    putchar('\n');
-
-    prettyPrintRec2(arbol->izq, "", arbol->der == NULL, print);
-    prettyPrintRec2(arbol->der, "", 1, print);
+	if(binaryTreeFind(data, &key, &read, sizeof(tStudent), studentCmp))
+	
 }
 
 int main(void)
 {
-	FILE *fp;
-	tAlumno alum;
-	tArbol a;
+	FILE *fpStudents;
+	tBinaryTree bstStudents;
+	int idQueried, shouldExit = FALSE, ret;
 
-	//printf("Archivo alumnos.dat:\n");
-	//debug_alumnos();
-	
-	fp = fopen("alumnos.dat", "rb");
+	fpStudents = fopen("alumnos.dat", "rb");
 
-	if(!fp) {
-		return 1;
+	if(!fpStudents) {
+		return ERR;
 	}
 
-	arbol_crear(&a);
+	binaryTreeNew(&bstStudents);
 
-	while(!feof(fp)) {
-		fread(&alum, sizeof(tAlumno), 1, fp);
-		arbol_insertar(&a, &alum, sizeof(tAlumno), alumno_cmp);
+	ret = binaryTreeLoadFromOrderedFile(
+		&bstStudents, 
+		&fpStudents, 
+		sizeof(tStudent)
+	);
+
+	if(ret != OK) {
+		binaryTreeDelete(&bstStudents);
+		fclose(fpStudents);
+		return ERR;
 	}
 
-	prettyPrintArbol(a, print_alumno);
+	fclose(fpStudents);
 
-	printf("")
+	while(!shouldExit) {
+		showMenuHeader();
 
-	arbol_destruir(&a);
-	
-	return 0;
+		scanf("%d", &idQueried);
+
+		if(idQueried == -1) {
+			shouldExit = TRUE;
+			continue;
+		}		
+
+		handleInput(idQueried, &bstStudents);
+	}
+
+	binaryTreeDelete(&bstStudents);
+
+	return OK;
 }

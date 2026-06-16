@@ -1,7 +1,17 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include "node.h"
+#include <stdlib.h>
+#include <string.h>
+
+#include "common.h"
+
+typedef struct sNode tNode;
+struct sNode {
+	tNode *next;
+	unsigned n;
+	void *buf;
+};
 
 typedef struct { 
 	tNode *front, *back;
