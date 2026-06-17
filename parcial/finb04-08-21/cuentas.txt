@@ -1,0 +1,5 @@
+493;RT;Perez, Juan;948;345.75
+285;LP;Dario, Ruben;392;1453.66
+345;MF;Suarez, Romina;864;19838.4
+104;MF;Dominguez, Pedro;291;493.24
+938;RT;Ramirez, Sofia;573;123.45
