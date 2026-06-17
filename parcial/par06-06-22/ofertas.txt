@@ -1,0 +1,26 @@
+Usuario
+	Producto			Precio	Envio Gratis
+Jere2005
+	Doom3           		22.50	No
+	Minecraft       		22.50	No
+	GTAVI           		67.50	No
+	Silksong        		18.00	No
+	Hollow Knight   		13.50	No
+Gabi1976
+	Doom3           		6.25	No
+	Minecraft       		6.25	No
+	GTAVI           		18.75	No
+	Silksong        		5.00	No
+	Hollow Knight   		3.75	No
+Oli2009
+	Doom3           		18.75	No
+	Minecraft       		18.75	No
+	GTAVI           		56.25	Si
+	Silksong        		15.00	No
+	Hollow Knight   		11.25	No
+Ruben1959
+	Doom3           		12.50	Si
+	Minecraft       		12.50	Si
+	GTAVI           		37.50	Si
+	Silksong        		10.00	No
+	Hollow Knight   		7.50	No
